@@ -10,9 +10,16 @@ var connection = mysql.createConnection({
   database : 'shorturl'
 });
  
-connection.connect();
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+ 
+  console.log('connected as id ' + connection.threadId);
+});
 
-router.post('/',(req,res,next)=>{
+router.post('/',async (req,res,next)=>{
   let userURL = req.body.userURL;
   let sql = "select * from student";
   let obj;
@@ -21,7 +28,8 @@ router.post('/',(req,res,next)=>{
     if (error) throw error;
     console.log(123)
     obj.data = results[0];
-  })
+    console.log(obj)
+  }) 
   res.send(obj)
 })
 
