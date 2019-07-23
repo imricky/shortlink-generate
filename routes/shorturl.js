@@ -1,36 +1,17 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql')
-
-
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '12345678',
-  database : 'shorturl'
-});
- 
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
- 
-  console.log('connected as id ' + connection.threadId);
-});
+const query = require('../util/dbhelper')
 
 router.post('/',async (req,res,next)=>{
   let userURL = req.body.userURL;
-  let sql = "select * from student";
-  let obj;
+  let sql = 'select * from ?? ';
+  let obj = {};
+  let a = 'student';
   //会出现异步调用问题，await解决
-  connection.query(sql,(error, results, fields)=>{
-    if (error) throw error;
-    console.log(123)
-    obj.data = results[0];
-    console.log(obj)
-  }) 
-  res.send(obj)
+  obj.data = await query(sql,'student');
+  res.send(obj);
+  
 })
 
 router.get('/',(req,res,next)=>{
