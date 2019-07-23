@@ -10,8 +10,7 @@ router.post('/',async (req,res,next)=>{
   let a = 'student';
   //会出现异步调用问题，await解决
   obj.data = await query(sql,'student');
-  res.send(obj);
-  
+  res.send(obj);  
 })
 
 router.get('/',(req,res,next)=>{
@@ -34,6 +33,12 @@ function string10to62(number) {
   return arr.join('');
 }
 
-
+//获取最大phid
+async function GetMaxPhid(){
+  let sql = 'select max(phid) as phid from fg_shortlink'
+  let maxPhid = await query(sql);
+  let final = maxPhid[0].phid + 1;
+  return final
+}
 
 module.exports = router
