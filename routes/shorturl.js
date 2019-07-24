@@ -2,36 +2,53 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql')
 const query = require('../util/dbhelper')
+const redis = require("redis"),
+  client = redis.createClient();
+
+const { promisify } = require('util');
+const setAsync = promisify(client.set).bind(client);
+const getAsync = promisify(client.get).bind(client);
+
+
+const SHORT_LINK_PREFIX = 'expressShortlink';
+const EXPIRE_TIME = 60 * 60 * 24 * 365; //过期时间存成1年
+
 
 router.post('/', async (req, res, next) => {
   let userURL = req.body.userURL;
   let returnObj = {
-    code:200,
-    success:true,
-    message:'成功',
-    gen_link:null
+    code: 200,
+    success: true,
+    message: '成功',
+    short_link: null
   }
   let genLinkInDatabase = await isExistShortlink(userURL);
+  //如果数据库里已经有长网址了，直接返回短网址结果
   if (genLinkInDatabase !== "") {
-    returnObj.gen_link = genLinkInDatabase;
+    returnObj.short_link = genLinkInDatabase;
     res.json(returnObj);
-  } else {
-    let maxPhid = await GetMaxPhid();
-    let gen_link = string10to62(maxPhid);
-    let inserted = await InsertGenlink(userURL,gen_link);
-    if(inserted.affectedRows === 0){
-      res.json({
-        code: 500,
-        success: false,
-        message:'数据库插入错误',
-        gen_link: null
-      })
-    }else{
-      returnObj.gen_link = gen_link;
-      res.json(returnObj);
-    }
-
+    return;
   }
+  //生成短链接
+  let maxPhid = await GetMaxPhid();
+  let short_link = string10to62(maxPhid);
+  let params = {
+    long_link: userURL,
+    short_link: short_link
+  }
+  //插入数据库
+  let success = await storeShortLink(params);
+  if (!success) {
+    res.json({
+      code: 500,
+      success: false,
+      message: '数据库插入错误',
+      short_link: null
+    })
+    return;
+  }
+  returnObj.short_link = short_link;
+  res.json(returnObj);
 })
 
 router.get('/', (req, res, next) => {
@@ -62,27 +79,46 @@ async function GetMaxPhid() {
   return final
 }
 
-//查找数据库是否存在对应的短网址是否存在
-async function isExistShortlink(user_link) {
-  let sql = 'select * from fg_shortlink where user_link = ?'
-  let result = await query(sql, [user_link]);
+//查找数据库是否存在对应的短网址是否存在。
+//先去redis里查，没有查到就去mysql里查，同时同步redis,都没有的话再生成一个新的
+async function isExistShortlink(long_link) {
+  let sql = 'select * from fg_shortlink where long_link = ?'
+  let result = await query(sql, [long_link]);
   if (result.length === 0) {
     return '';
   } else {
-    return result[0].gen_link
+    return result[0].short_link
   }
 }
 
-//将短链接写到数据库里
-async function InsertGenlink(user_link, gen_link) {
 
-  let post = { user_link: user_link, gen_link: gen_link };
-  let result = await query('INSERT INTO fg_shortlink SET ?', post);
-  return {
-    affectedRows: result.affectedRows,
-    insertId: result.insertId
+//存短链接
+async function storeShortLink(params) {
+  let { long_link, short_link } = params;
+  let success = false; //判断是否成功
+  let post = {
+    long_link: long_link,
+    short_link: short_link,
+    type: 1, //1 表示系统生成，2表示用户自定义
+    inserted_at: new Date().valueOf(),
+    updated_at: new Date().valueOf(),
+  };
+  //存MySQL：
+  try {
+    let resultMySQL = await query('INSERT INTO fg_shortlink SET ?', post);
+    if (resultMySQL.affectedRows === 1) {
+      success = true;
+    }
+  } catch (e) {
+    console.log(e)
   }
+  //存redis
+  if (success === true) {
+    client.set('key', 'value!', 'EX', 10);
+    let resultRedis = await setAsync(`${SHORT_LINK_PREFIX}##${short_link}`, long_link, 'EX', EXPIRE_TIME)
+    success = resultRedis === "OK"
+  }
+  return success
 }
-
 
 module.exports = router
