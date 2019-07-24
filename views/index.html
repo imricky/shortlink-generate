@@ -11,13 +11,33 @@
     <![endif]-->
     <!-- styles -->
     <link href="stylesheets/style.css" rel="stylesheet">
+    <link href="stylesheets/iview.css" rel="stylesheet">
+    <script src="javascripts/vue.min.js"></script>
+    <script src="javascripts/iview.min.js"></script>
  
 </head>
 <body>
        <%= title %>
        <div>123</div>
+       <div id="app">
+          <i-button @click="show">Click me!</i-button>
+          <Modal v-model="visible" title="Welcome">Welcome to iView</Modal>
+      </div>
        <script>
          console.log(123)
        </script>
+       <script>
+          new Vue({
+              el: '#app',
+              data: {
+                  visible: false
+              },
+              methods: {
+                  show: function () {
+                      this.visible = true;
+                  }
+              }
+          })
+        </script>
 </body>
 </html>
