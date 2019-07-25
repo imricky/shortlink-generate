@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>404 Not Found</title>
+  <style>
+    .big-word {
+      font-size: 40px;
+      margin: 20px 0 0 40px;
+      color: #515a6e
+    }
+
+    .not-found {
+      font-size: 60px;
+      margin: 20px 0 0 40px;
+      color: #2d8cf0
+    }
+
+    #button {
+      margin: 20px 0 0 40px;
+      font-size: 30px;
+      color: #2db7f5
+    }
+  </style>
+</head>
+
+<body>
+  <div class="big-word">Our apologies.</div>
+  <div class="big-word">We're unable to find the</div>
+  <div class="big-word">page you're looking for.</div>
+
+  <div class="not-found">404 Not Found</div>
+
+  <button id="button">回到首页</button>
+  <script>
+    document.getElementById('button').onclick = function () {
+      window.location.href = '/'
+    }
+  </script>
+</body>
+
+</html>

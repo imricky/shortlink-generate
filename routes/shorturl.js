@@ -125,25 +125,4 @@ async function storeShortLink(params) {
   }
   return success
 }
-
-
-//查找长链接，用于跳转
-async function queryLink(short_link) {
-  //先去redis里查
-  let resRedis = await getAsync(`${SHORT_LINK_PREFIX}##${short_link}`);
-  if (resRedis !== null) {
-    return resRedis
-  }
-  //redis里没找到就去找MySQL
-  let resMySQL = await query('select long_link from fg_shortlink where short_link = ?', [short_link]);
-  if (resMySQL && resMySQL.length > 0) {
-    const long_link = resMySQL[0].long_link;
-    //同步redis
-    await setAsync(`${SHORT_LINK_PREFIX}##${short_link}`, long_link, 'EX', EXPIRE_TIME);
-    return long_link;
-  }
-
-  return null; //找不到返回空
-}
-
 module.exports = router
