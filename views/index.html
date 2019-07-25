@@ -1,43 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Pivotal Search</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
+  <meta charset="UTF-8">
+  <title>Pivotal Search</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
       <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
     <![endif]-->
-    <!-- styles -->
-    <link href="stylesheets/style.css" rel="stylesheet">
-    <link href="stylesheets/iview.css" rel="stylesheet">
-    <script src="javascripts/vue.min.js"></script>
-    <script src="javascripts/iview.min.js"></script>
- 
+  <!-- styles -->
+  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <!-- <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script> -->
+  <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
+  <script type="text/javascript" src="javascripts/vue.min.js"></script>
+  <script type="text/javascript" src="javascripts/iview.min.js"></script>
+  <script type="text/javascript" src="javascripts/axios.min.js"></script>
+  <script type="text/javascript" src="javascripts/copyClipboard.js"></script>
+
 </head>
+
 <body>
-       <%= title %>
-       <div>123</div>
-       <div id="app">
-          <i-button @click="show">Click me!</i-button>
-          <Modal v-model="visible" title="Welcome">Welcome to iView</Modal>
-      </div>
-       <script>
-         console.log(123)
-       </script>
-       <script>
-          new Vue({
-              el: '#app',
-              data: {
-                  visible: false
-              },
-              methods: {
-                  show: function () {
-                      this.visible = true;
-                  }
-              }
+
+  <div id="app">
+    <div id="container">
+      <Card :bordered="false">
+        <div class="title">
+          <img src="../../images/logo.png">
+          <span>COOL SHORTLINK</span>
+          <!-- <%= title %> -->
+        </div>
+        <div class="link">
+          <div class="link-container">
+            <i-input size="large" v-model="longLink" clearable placeholder="请输入网址">
+              <i-button slot="append" icon="ios-search" @click="generate">long link</i-button>
+            </i-input>
+          </div>
+        </div>
+
+        <div class="link short-link" v-if="isGenerated">
+          <div class="link-container">
+            <i-input size="large" v-model="shortLink" clearable readonly="true">
+              <i-button slot="append" icon="ios-search" @click="copyToClipboard">copy link</i-button>
+            </i-input>
+          </div>
+        </div>
+
+      </Card>
+    </div>
+  </div>
+
+  <script>
+    console.log(123)
+  </script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        longLink: '',
+        shortLink: '',
+        isGenerated: false
+      },
+      methods: {
+        generate: function () {
+          //先判断是否是一个合法的URL
+          if (!this.checkURL(this.longLink)) {
+            this.$Message.error({
+              title:'提示',
+              content:'输入的网址不合法，请重新输入',             
+            })
+            return;
+          }
+          var userURL = this.longLink;
+          var self = this;
+          axios.post('/su/gen', {
+            params: {
+              userURL
+            }
           })
-        </script>
+            .then(function (response) {
+              let data = response.data;
+              self.shortLink = "localhost:3000/s/" + data.short_link;
+              self.isGenerated = true;
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+        },
+        checkURL: function (url) {
+          //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+          //下面的代码中应用了转义字符"\"输出一个字符"/"
+          var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+          var objExp = new RegExp(Expression);
+          if (objExp.test(url) == true) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        copyToClipboard: function () {
+          let shortLink = this.shortLink;
+          Clipboard.copy(shortLink);
+        },        
+      }
+    })
+  </script>
 </body>
+
 </html>

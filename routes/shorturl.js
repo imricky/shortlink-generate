@@ -17,8 +17,8 @@ router.get('/', (req, res, next) => {
   res.send('接口get成功了')
 })
 
-router.post('/', async (req, res, next) => {
-  let userURL = req.body.userURL;
+router.post('/gen', async (req, res, next) => {
+  let userURL = req.body.params.userURL;
   let returnObj = {
     code: 200,
     success: true,

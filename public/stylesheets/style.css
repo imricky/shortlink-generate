@@ -1,11 +1,47 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+#container {
+  width: 800px;
+  height: 400px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -200px 0 0 -400px;
+  border: 1px solid red;
 }
-div{
-  font-size: 40px;
+.title {
+  line-height: 60px;
+  height: 60px;
+  text-align: center;
+  border: 1px solid red;
+}
+
+.title>img {
+  vertical-align: middle;
+  height: 48px;
+}
+
+.title>span {
+  font-size: 48px;
+  line-height: 48px;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.link{
+  margin-top: 80px;
+  line-height: 60px;
+  height: 60px;
+  /* text-align: center; */
+  border: 1px solid red;
+}
+.link-container{
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.short-link{
+  margin-top: 20px;
 }
