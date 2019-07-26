@@ -18,13 +18,15 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/gen', async (req, res, next) => {
-  let userURL = req.body.params.userURL;
-  let returnObj = {
-    code: 200,
-    success: true,
-    message: '成功',
-    short_link: null,
-    long_link: userURL
+  let userURL = req.body.userURL;
+  //后端也先校验url
+  if(!checkURL(userURL)){
+    return res.json({
+      code: 500,
+      message: '非法链接',
+      short_link: null,
+      long_link: userURL
+    });
   }
   let shortLinkInDatabase = await isExistShortlink(userURL);
   //如果数据库里已经有长网址了，直接返回短网址结果
@@ -76,6 +78,18 @@ function string10to62(number) {
     arr.unshift(charsArr[mod]);
   } while (qutient);
   return arr.join('');
+}
+
+function checkURL(url) {
+  //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+  //下面的代码中应用了转义字符"\"输出一个字符"/"
+  var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+  var objExp = new RegExp(Expression);
+  if (objExp.test(url) == true) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 //获取最大phid

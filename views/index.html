@@ -77,9 +77,7 @@
           var userURL = this.longLink;
           var self = this;
           axios.post('/su/gen', {
-            params: {
-              userURL
-            }
+              userURL:userURL
           })
             .then(function (response) {
               let data = response.data;
