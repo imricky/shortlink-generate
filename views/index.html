@@ -69,18 +69,25 @@
           //先判断是否是一个合法的URL
           if (!this.checkURL(this.longLink)) {
             this.$Message.error({
-              title:'提示',
-              content:'输入的网址不合法，请重新输入',             
+              title: '提示',
+              content: '输入的网址不合法，请重新输入',
             })
             return;
           }
           var userURL = this.longLink;
           var self = this;
           axios.post('/su/gen', {
-              userURL:userURL
+            userURL: userURL
           })
             .then(function (response) {
               let data = response.data;
+              if (data.code === 500) {
+                this.$Message.error({
+                  title: '提示',
+                  content: '输入的网址不合法，请重新输入',
+                })
+                return;
+              }
               self.shortLink = "localhost:3000/s/" + data.short_link;
               self.isGenerated = true;
 
@@ -106,7 +113,7 @@
         copyToClipboard: function () {
           let shortLink = this.shortLink;
           Clipboard.copy(shortLink);
-        },        
+        },
       }
     })
   </script>

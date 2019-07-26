@@ -29,7 +29,6 @@ describe('非法网址报错', function () {
     expect(data.code).to.equal(500);
     expect(data.short_link).to.equal(null);
   });
-
   it('url为空', async () => {
     const result = await axios.post('http://localhost:3000/su/gen',{
       userURL: '',
