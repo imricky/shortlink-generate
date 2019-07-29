@@ -1,5 +1,23 @@
 body {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  
+}
+
+#app{
+  position:fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height:100%;
+  min-width: 1000px;
+  z-index:-10;
+  zoom: 1;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-position: center 0;
 }
 
 #container {
@@ -9,13 +27,13 @@ body {
   left: 50%;
   top: 50%;
   margin: -200px 0 0 -400px;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 .title {
   line-height: 60px;
   height: 60px;
   text-align: center;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .title>img {
@@ -31,11 +49,11 @@ body {
 }
 
 .link{
-  margin-top: 80px;
+  margin-top: 60px;
   line-height: 60px;
   height: 60px;
   /* text-align: center; */
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 .link-container{
   position: relative;
