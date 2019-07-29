@@ -40,13 +40,13 @@ router.post('/gen', async (req, res, next) => {
   }
   //生成短链接
   let maxPhid = await GetMaxPhid();
-  let short_link = string10to62(maxPhid);
+  let short_link = await string10to62(maxPhid);
   let params = {
     long_link: userURL,
     short_link: short_link
   }
   //插入数据库
-  let success = await storeShortLink(params);
+  let {success,short_linkInDB} = await storeShortLink(params);
   if (!success) {
     return res.json({
       code: 500,
@@ -57,7 +57,7 @@ router.post('/gen', async (req, res, next) => {
   res.json({
     code: 200,
     message: '成功',
-    short_link: short_link,
+    short_link: short_linkInDB,
     long_link: userURL
   })
 })
@@ -66,7 +66,7 @@ router.post('/gen', async (req, res, next) => {
 
 //10进制转62进制
 //3843 对应61*62^0+61*62^1    3844对应100
-function string10to62(number) {
+async function string10to62(number) {
   const chars = '0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ';
   const charsArr = chars.split('');
   const radix = chars.length;
@@ -125,18 +125,33 @@ async function storeShortLink(params) {
   };
   //存MySQL：
   try {
+    //存的时候先去取，防止高并发的时候重复存
+    let existMySQL = await query('select * from fg_shortlink where long_link = ?',[long_link]);
+    if(existMySQL.length != 0){
+      return {
+        success:true,
+        short_linkInDB:existMySQL[0].short_link
+      }
+    }
     let resultMySQL = await query('INSERT INTO fg_shortlink SET ?', post);
     if (resultMySQL.affectedRows === 1) {
       success = true;
     }
   } catch (e) {
-    console.log(e)
+    console.log(e);
+    return {
+      success:true,
+      short_linkInDB:short_link
+    }
   }
   //存redis
   if (success === true) {
     let resultRedis = await setAsync(`${SHORT_LINK_PREFIX}##${short_link}`, long_link, 'EX', EXPIRE_TIME)
     success = resultRedis === "OK"
   }
-  return success
+  return {
+    success:true,
+    short_linkInDB:short_link
+  }
 }
 module.exports = router
