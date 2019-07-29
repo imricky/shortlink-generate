@@ -67,7 +67,7 @@ router.post('/gen', async (req, res, next) => {
 //10进制转62进制
 //3843 对应61*62^0+61*62^1    3844对应100
 async function string10to62(number) {
-  const chars = '0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ';
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const charsArr = chars.split('');
   const radix = chars.length;
   let qutient = +number;
