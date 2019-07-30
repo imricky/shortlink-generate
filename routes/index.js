@@ -50,6 +50,7 @@ router.post('/login', async (req, res, next) => {
   }
   let userInDB = sql[0].user;
   let passwordInDB = sql[0].password;
+  let phid = sql[0].phid;
   //加盐做对比
   let cryptoPassword = await pbkdf2Async(password, 'qwertyu', 100000, 512, 'sha512');
   if(cryptoPassword !== passwordInDB){
@@ -60,7 +61,7 @@ router.post('/login', async (req, res, next) => {
     })
   }
   //存入session信息
-  req.session.user  = 'ricky'
+  req.session.user  = phid
   res.json({
     success:true,
     code:200,

@@ -41,9 +41,11 @@ router.post('/gen', async (req, res, next) => {
   //生成短链接
   let maxPhid = await GetMaxPhid();
   let short_link = await string10to62(maxPhid);
+  let user = req.session.user || 0; //没有就是0
   let params = {
     long_link: userURL,
-    short_link: short_link
+    short_link: short_link,
+    user:user
   }
   //插入数据库
   let {success,short_linkInDB} = await storeShortLink(params);
@@ -114,7 +116,7 @@ async function isExistShortlink(long_link) {
 
 //存短链接
 async function storeShortLink(params) {
-  let { long_link, short_link } = params;
+  let { long_link, short_link,user } = params;
   let success = false; //判断是否成功
   let post = {
     long_link: long_link,
@@ -122,6 +124,7 @@ async function storeShortLink(params) {
     type: 1, //1 表示系统生成，2表示用户自定义
     inserted_at: new Date().valueOf(),
     updated_at: new Date().valueOf(),
+    userPhid:user
   };
   //存MySQL：
   try {
