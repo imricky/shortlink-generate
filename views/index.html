@@ -12,15 +12,26 @@
     <![endif]-->
   <!-- styles -->
   <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-  <!-- <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
-  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
-  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script> -->
+<!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+<!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+<!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
   <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
   <script type="text/javascript" src="javascripts/vue.min.js"></script>
   <script type="text/javascript" src="javascripts/iview.min.js"></script>
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
   <script type="text/javascript" src="javascripts/copyClipboard.js"></script>
-
+  <style>
+    .droplist{
+      color: #515a6e;
+      display: block;
+      width: auto;
+      padding: 0 5px;
+    }
+    .droplist:hover{
+      background-color: #e8eaec;
+      cursor:pointer
+    }
+  </style>
 </head>
 
 <body>
@@ -30,7 +41,19 @@
     <div id="ceil">
       <ul v-if="isLogin">
         <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
-        <li><i-button @click="login">头像</i-button></li>
+        <li><i-button @click="logout">注销</i-button></li>
+        <li>
+          <Dropdown>
+            <a href="javascript:void(0)">
+              头像
+              <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem class="droplist">我的短链接</DropdownItem>
+              <DropdownItem class="droplist">个人信息</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </li>
       </ul>
       <ul v-else>
         <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
@@ -83,6 +106,9 @@
           window.location.href = '/login'
         },
         register(){
+          window.location.href = '/register'
+        },
+        logout(){
           window.location.href = '/register'
         },
         checkCookies(){
