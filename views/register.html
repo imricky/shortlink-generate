@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pivotal Search</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
+  <![endif]-->
+  <!-- styles -->
+  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+  <!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+  <!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+  <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
+  <script type="text/javascript" src="javascripts/vue.min.js"></script>
+  <script type="text/javascript" src="javascripts/iview.min.js"></script>
+  <script type="text/javascript" src="javascripts/axios.min.js"></script>
+  <style>
+    #input-all {
+      width: 600px;
+      height: 250px;
+      border: 1px solid rebeccapurple;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 100px;
+    }
+
+    .input-form {
+      padding-top: 20px;
+
+    }
+
+    .input-button {
+      width: 100px;
+      display: table;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
+<div id="app">
+  <div id="ceil">
+    <ul>
+      <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
+      <!--        <li><a class="active" href="#home">主页</a></li>-->
+      <li>
+        <i-button @click="register">注册</i-button>
+      </li>
+      <li>
+        <i-button @click="login">登录</i-button>
+      </li>
+      <!--        <li><a href="#contact">联系</a></li>-->
+    </ul>
+  </div>
+  <div id="container">
+    <Card :bordered="false">
+      <div id="input-all">
+        <i-form ref="formInline" :model="formInline" :rules="ruleInline" inline>
+          <FormItem prop="user">
+            <i-input type="text" v-model="formInline.user" placeholder="Username" class="input-form">
+              <Icon type="ios-person-outline" slot="prepend"></Icon>
+            </i-input>
+          </FormItem>
+          <FormItem prop="password" class="input-form">
+            <i-input type="password" v-model="formInline.password" placeholder="Password" class="input-form">
+              <Icon type="ios-lock-outline" slot="prepend"></Icon>
+            </i-input>
+          </FormItem>
+          <FormItem prop="repassword" class="input-form">
+            <i-input type="password" v-model="formInline.repassword" placeholder="RePassword" class="input-form">
+              <Icon type="ios-lock-outline" slot="prepend"></Icon>
+            </i-input>
+          </FormItem>
+          <FormItem>
+            <i-button type="primary" @click="handleSubmit('formInline')" class="input-button">注册</i-button>
+          </FormItem>
+        </i-form>
+      </div>
+    </Card>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        formInline: {
+          user: '',
+          password: '',
+          repassword: ''
+        },
+        ruleInline: {
+          user: [
+            {required: true, message: 'Please fill in the user name', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: 'Please fill in the password.', trigger: 'blur'},
+            //{ type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          ],
+          repassword: [
+            {required: true, message: 'Please fill in the password.', trigger: 'blur'},
+            //{ type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    methods: {
+      login() {
+        window.location.href = '/login'
+      },
+      register() {
+        window.location.href = '/register'
+      },
+      handleSubmit(name) {
+        //校验密码是否输入正确
+        let pw = this.formInline.password
+        let repw = this.formInline.repassword
+        if (pw !== repw) {
+          this.$Message.error({
+            title: '提示',
+            content: '两次密码输入不一致，请重新输入',
+          })
+          return;
+        }
+
+        var self = this
+        axios.post('/register', {
+          user: self.formInline.user,
+          password: self.formInline.password
+        })
+            .then(function (response) {
+              let data = response.data
+              console.log(data)
+
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+            .then(function () {
+              // always executed
+            })
+      }
+    }
+  })
+</script>
+</body>
+
+</html>

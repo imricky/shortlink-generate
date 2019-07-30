@@ -25,7 +25,19 @@
 
 <body>
 
-  <div id="app" style="background-image: url(./images/bg.jpg);">
+  <!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
+  <div id="app">
+    <div id="ceil">
+      <ul v-if="isLogin">
+        <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
+        <li><i-button @click="login">头像</i-button></li>
+      </ul>
+      <ul v-else>
+        <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
+        <li><i-button @click="register">注册</i-button></li>
+        <li><i-button @click="login">登录</i-button></li>
+      </ul>
+    </div>
     <div id="container">
       <Card :bordered="false">
         <div class="title">
@@ -36,7 +48,7 @@
         <div class="link">
           <div class="link-container">
             <i-input size="large" v-model="longLink" clearable placeholder="请输入网址">
-              <i-button slot="append" icon="ios-search" @click="generate">long link</i-button>
+              <i-button slot="append" icon="ios-search" @click="generate">缩短网址</i-button>
             </i-input>
           </div>
         </div>
@@ -44,7 +56,7 @@
         <div class="link short-link" v-if="isGenerated">
           <div class="link-container">
             <i-input size="large" v-model="shortLink" clearable readonly="true">
-              <i-button slot="append" icon="ios-search" @click="copyToClipboard">copy link</i-button>
+              <i-button slot="append" icon="ios-search" @click="copyToClipboard">复制链接</i-button>
             </i-input>
           </div>
         </div>
@@ -59,9 +71,25 @@
       data: {
         longLink: '',
         shortLink: '',
-        isGenerated: false
+        isGenerated: false,
+        isLogin:false
+      },
+      mounted(){
+        //一进来就去看有没有cookie在本地
+        this.checkCookies();
       },
       methods: {
+        login(){
+          window.location.href = '/login'
+        },
+        register(){
+          window.location.href = '/register'
+        },
+        checkCookies(){
+          if(document.cookie.indexOf('session_id') > -1){
+            this.isLogin = true;
+          }
+        },
         generate: function () {
           //先判断是否是一个合法的URL
           if (!this.checkURL(this.longLink)) {
@@ -101,11 +129,7 @@
           //下面的代码中应用了转义字符"\"输出一个字符"/"
           var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
           var objExp = new RegExp(Expression);
-          if (objExp.test(url) == true) {
-            return true;
-          } else {
-            return false;
-          }
+          return objExp.test(url) === true;
         },
         copyToClipboard: function () {
           let shortLink = this.shortLink;
