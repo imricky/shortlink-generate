@@ -89,3 +89,12 @@ typings/
 
 .vscode/
 test.js
+
+idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+logs/
