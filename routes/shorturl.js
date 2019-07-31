@@ -65,6 +65,29 @@ router.post('/gen', async (req, res, next) => {
 })
 
 
+router.get('/getList',async (req, res, next) =>{
+  let user = req.session.user || 0; //没有就是0
+  try {
+    let result = await query('select * from fg_shortlink where userphid = ?',[user]);
+    res.json({
+      success:true,
+      data:result,
+      code:200,
+    })
+  }catch (e) {
+    res.json({
+      success:false,
+      data:result,
+      code:500,
+      errorMsg:e
+    })
+  }
+
+})
+
+
+
+
 
 //10进制转62进制
 //3843 对应61*62^0+61*62^1    3844对应100

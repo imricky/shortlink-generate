@@ -33,7 +33,7 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
   cookie: {
-    'maxAge': 1000*60,
+    'maxAge': 1000*600,
     'httpOnly':false,
   },
   store: new redisStore({

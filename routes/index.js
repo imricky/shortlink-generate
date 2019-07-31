@@ -37,7 +37,13 @@ router.get('/register', function (req, res, next) {
   res.render('register', {title: 'Express'})
 })
 
+router.get('/myshortlink', function (req, res, next) {
+  res.render('myshortlink', {title: 'Express'})
+})
 
+
+
+//接口
 router.post('/login', async (req, res, next) => {
   let {user, password} = req.body;
   let sql = await query('select * from fg_user where user = ?',[user]);
@@ -112,6 +118,10 @@ router.post('/register', async (req, res, next) => {
 
 
 })
+
+
+
+router.get('')
 
 
 module.exports = router
