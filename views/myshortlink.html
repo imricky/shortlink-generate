@@ -12,9 +12,9 @@
   <![endif]-->
   <!-- styles -->
   <!--  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">-->
-  <!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
-  <!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
-  <!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+<!--    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+<!--    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+<!--    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
   <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
   <script type="text/javascript" src="javascripts/vue.min.js"></script>
   <script type="text/javascript" src="javascripts/iview.min.js"></script>
@@ -50,7 +50,7 @@
         <span>{{ row.long_link }}</span>
       </template>
       <!--      短链接自定义-->
-      <template slot-scope="{ row, index }" slot="short_link">
+      <template slot-scope="{ row, index }" slot="short_link" ellipsis="true">
         <Input type="text" v-model="editShortLink" v-if="editIndex === index"/>
         <span v-else>{{ row.short_link }}</span>
       </template>
@@ -89,7 +89,9 @@
           },
           {
             title: '原链接',
-            slot: 'long_link'
+            slot: 'long_link',
+            // ellipsis: true,
+            // tooltip: 'true'
           },
           {
             title: '短链接',
