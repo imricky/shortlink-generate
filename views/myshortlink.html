@@ -11,7 +11,7 @@
   <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
   <![endif]-->
   <!-- styles -->
-  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <!--  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">-->
   <!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
   <!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
   <!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
@@ -20,26 +20,6 @@
   <script type="text/javascript" src="javascripts/iview.min.js"></script>
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
   <style>
-    #input-all {
-      width: 600px;
-      height: 250px;
-      border: 1px solid rebeccapurple;
-      position: relative;
-      margin: 0 auto;
-      margin-top: 100px;
-    }
-
-    .input-form {
-      padding-top: 20px;
-
-    }
-
-    .input-button {
-      width: 100px;
-      display: table;
-      margin: 0 auto;
-      margin-top: 20px;
-    }
   </style>
 </head>
 
@@ -47,19 +27,19 @@
 
 <!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
 <div id="app">
-  <div id="ceil">
-    <ul>
-      <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
-      <!--        <li><a class="active" href="#home">主页</a></li>-->
-      <li>
-        <i-button @click="register">注册</i-button>
-      </li>
-      <li>
-        <i-button @click="login">登录</i-button>
-      </li>
-      <!--        <li><a href="#contact">联系</a></li>-->
-    </ul>
-  </div>
+  <!--  <div id="ceil">-->
+  <!--    <ul>-->
+  <!--      <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>-->
+  <!--      &lt;!&ndash;        <li><a class="active" href="#home">主页</a></li>&ndash;&gt;-->
+  <!--      <li>-->
+  <!--        <i-button @click="register">注册</i-button>-->
+  <!--      </li>-->
+  <!--      <li>-->
+  <!--        <i-button @click="login">登录</i-button>-->
+  <!--      </li>-->
+  <!--      &lt;!&ndash;        <li><a href="#contact">联系</a></li>&ndash;&gt;-->
+  <!--    </ul>-->
+  <!--  </div>-->
   <div id="table-container">
     <i-table :columns="columns" :data="data">
       <template slot-scope="{ row, index }" slot="phid">
@@ -69,18 +49,18 @@
       <template slot-scope="{ row, index }" slot="long_link">
         <span>{{ row.long_link }}</span>
       </template>
-<!--      短链接自定义-->
+      <!--      短链接自定义-->
       <template slot-scope="{ row, index }" slot="short_link">
-        <Input type="text" v-model="editShortLink" v-if="editIndex === index" />
+        <Input type="text" v-model="editShortLink" v-if="editIndex === index"/>
         <span v-else>{{ row.short_link }}</span>
       </template>
 
       <template slot-scope="{ row, index }" slot="inserted_at">
-        <span>{{ row.inserted_at }}</span>
+        <span>{{ getTime(row.inserted_at) }}</span>
       </template>
 
       <template slot-scope="{ row, index }" slot="updated_at">
-        <span>{{ row.updated_at }}</span>
+        <span>{{ getTime(row.updated_at) }}</span>
       </template>
 
       <template slot-scope="{ row, index }" slot="action">
@@ -94,6 +74,7 @@
       </template>
     </i-table>
   </div>
+  <Page :total="totalCount" show-total @on-change="changePage"/>
 </div>
 
 <script>
@@ -130,68 +111,86 @@
         data: [],
         editIndex: -1,  // 当前聚焦的输入框的行数
         editShortLink: '',  // 第一列输入框，当然聚焦的输入框的输入内容，与 data 分离避免重构的闪烁
+        editPhid: '',
+        totalCount: 0,//总条数
+        currentPage: 1,//当前页
       }
     },
-    created(){
-      this.getList();
+    created() {
+      this.getList()
     },
     methods: {
+      changePage(page) {
+        this.currentPage = page
+        this.getList()
+        window.scroll(0, 0)
+      },
       login() {
         window.location.href = '/login'
       },
       register() {
         window.location.href = '/register'
       },
-      handleEdit (row, index) {
-        this.editShortLink = row.short_link;
-        this.editIndex = index;
+      handleEdit(row, index) {
+        this.editShortLink = row.short_link
+        this.editPhid = row.phid
+        this.editIndex = index
       },
-      handleSave (index) {
-        this.data[index].short_link = this.editShortLink;
-        this.editIndex = -1;
-      },
-      getBirthday (birthday) {
-        const date = new Date(parseInt(birthday));
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        return `${year}-${month}-${day}`;
-      },
-      handleSubmit(name) {
-        //校验密码是否输入正确
-        let pw = this.formInline.password
-        let repw = this.formInline.repassword
-        if (pw !== repw) {
-          this.$Message.error({
-            title: '提示',
-            content: '两次密码输入不一致，请重新输入',
-          })
-          return;
-        }
-
+      handleSave(index) {
         var self = this
-        axios.post('/register', {
-          user: self.formInline.user,
-          password: self.formInline.password
+        axios.post('/su/saveInfo', {
+          phid: self.editPhid,
+          short_link: self.editShortLink
         })
             .then(function (response) {
               let data = response.data
-              self.data = data.data;
+              if (data.success === false) {
+                self.$Message.error({
+                  title: '提示',
+                  content: data.errorMsg,
+                })
+
+                return
+              }
+              self.$Message.success({
+                title: '提示',
+                content: '更新成功',
+              })
+              self.data[index].short_link = self.editShortLink
+              self.data[index].updated_at = data.time
+              self.editIndex = -1
 
             })
             .catch(function (error) {
-              console.log(error)
+              self.$Message.error({
+                title: '提示',
+                content: error,
+              })
+              return
             })
             .then(function () {
               // always executed
             })
+
+
       },
-      getList(){
-        let self = this;
-        axios.get('/su/getList')
+      getTime(time) {
+        const date = new Date(parseInt(time))
+        const Y = date.getFullYear() + '-'
+        const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        const D = date.getDate() + ' '
+        const h = date.getHours() + ':'
+        const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+        const s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+        return Y + M + D + h + m + s
+      },
+      getList() {
+        let self = this
+        axios.get('/su/getList?currentPage=' + self.currentPage)
             .then(function (response) {
               let data = response.data
-              self.data = data.data;
+              self.data = data.data
+              self.totalCount = data.count
 
             })
             .catch(function (error) {
