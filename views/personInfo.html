@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pivotal Search</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
+  <![endif]-->
+  <!-- styles -->
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css">
+  <!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+  <!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+  <!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+  <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
+  <script type="text/javascript" src="javascripts/vue.min.js"></script>
+  <script type="text/javascript" src="javascripts/iview.min.js"></script>
+  <script type="text/javascript" src="javascripts/axios.min.js"></script>
+  <script type="text/javascript" src="javascripts/copyClipboard.js"></script>
+  <style>
+    .droplist{
+      color: #515a6e;
+      display: block;
+      width: auto;
+      padding: 0 5px;
+    }
+    .droplist:hover{
+      background-color: #e8eaec;
+      cursor:pointer
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
+<div id="app">
+
+      <span>Hi,</span><%=phid %>
+      <span>敬请期待</span>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      longLink: '',
+      shortLink: '',
+      isGenerated: false,
+      isLogin:false
+    },
+    mounted(){
+      //一进来就去看有没有cookie在本地
+      this.checkCookies();
+    },
+    methods: {
+      login(){
+        window.location.href = '/login'
+      },
+      register(){
+        window.location.href = '/register'
+      },
+      logout(){
+        window.location.href = '/register'
+      },
+      myshortlink(){
+        window.location.href = '/myshortlink'
+      },
+      checkCookies(){
+        if(document.cookie.indexOf('session_id') > -1){
+          this.isLogin = true;
+        }
+      },
+      generate: function () {
+        //先判断是否是一个合法的URL
+        if (!this.checkURL(this.longLink)) {
+          this.$Message.error({
+            title: '提示',
+            content: '输入的网址不合法，请重新输入',
+          })
+          return;
+        }
+        var userURL = this.longLink;
+        var self = this;
+        axios.post('/su/gen', {
+          userURL: userURL
+        })
+            .then(function (response) {
+              let data = response.data;
+              if (data.code === 500) {
+                this.$Message.error({
+                  title: '提示',
+                  content: '输入的网址不合法，请重新输入',
+                })
+                return;
+              }
+              self.shortLink = "localhost:3000/s/" + data.short_link;
+              self.isGenerated = true;
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+            .then(function () {
+              // always executed
+            });
+      },
+      checkURL: function (url) {
+        //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+        //下面的代码中应用了转义字符"\"输出一个字符"/"
+        var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+        var objExp = new RegExp(Expression);
+        return objExp.test(url) === true;
+      },
+      copyToClipboard: function () {
+        let shortLink = this.shortLink;
+        Clipboard.copy(shortLink);
+      },
+    }
+  })
+</script>
+</body>
+
+</html>

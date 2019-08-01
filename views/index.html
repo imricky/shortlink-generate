@@ -50,7 +50,7 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem class="droplist" @click="myshortlink">我的短链接</DropdownItem>
-              <DropdownItem class="droplist">个人信息</DropdownItem>
+              <DropdownItem class="droplist" @click="personInfo">个人信息</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </li>
@@ -113,6 +113,9 @@
         },
         myshortlink(){
           window.location.href = '/myshortlink'
+        },
+        personInfo(){
+          window.location.href = '/users/1'
         },
         checkCookies(){
           if(document.cookie.indexOf('session_id') > -1){

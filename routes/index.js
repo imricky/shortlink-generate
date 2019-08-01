@@ -121,7 +121,6 @@ router.post('/register', async (req, res, next) => {
 
 
 
-router.get('')
 
 
 module.exports = router
