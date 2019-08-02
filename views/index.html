@@ -95,7 +95,8 @@
         longLink: '',
         shortLink: '',
         isGenerated: false,
-        isLogin:false
+        isLogin:false,
+        userphid: '',
       },
       mounted(){
         //一进来就去看有没有cookie在本地
@@ -115,12 +116,15 @@
           window.location.href = '/myshortlink'
         },
         personInfo(){
-          window.location.href = '/users/1'
+          window.location.href = '/users/'+ this.userphid
         },
         checkCookies(){
-          if(document.cookie.indexOf('session_id') > -1){
+          if(document.cookie.indexOf('connect.sid') > -1 && document.cookie.indexOf('user') > -1 ){
             this.isLogin = true;
+            let userPhid = document.cookie.split(';')[0].split('=')[1];
+            this.userphid = userPhid;
           }
+
         },
         generate: function () {
           //先判断是否是一个合法的URL

@@ -17,24 +17,16 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cookieParser('yog'))
-// app.use(session({
-//   'resave': true,
-//   'secret': 'yog',    // 签名，与上文中cookie设置的签名字符串一致
-//   'cookie': {
-//     'maxAge': 90000,
-//     'user':'test'
-//   },
-//   'name': 'session_id' //  在浏览器中生成cookie的名称key，默认是connect.sid
-// }));
-// session
 app.use(session({
-  name: 'session_id', // 这里是cookie的name，默认是connect.sid
+  //name: 'session_id', // 这里是cookie的name，默认是connect.sid
   secret: 'yog', // 建议使用 128 个字符的随机字符串
   resave: true,
   saveUninitialized: false,
   cookie: {
-    'maxAge': 1000*600,
-    'httpOnly':false,
+    // 'signed': true,
+    'maxAge': 1000 * 600,
+    'httpOnly': false,
+    //'username':'default'
   },
   store: new redisStore({
     host: '127.0.0.1',
@@ -49,6 +41,34 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))
 app.engine('.html', require('ejs').__express)
 app.set('view engine', 'html')
+
+
+//鉴权中间件
+let auth = (req, res, next) => {
+  let authArr = ['/myshortlink', '/users']
+  if (authArr.indexOf(req.path) > -1 || req.path.indexOf('/users') > -1) {
+    let cookieSessionId = req.signedCookies['connect.sid']
+    let sessionId = req.session.id
+    if (cookieSessionId === void 0 || sessionId === void 0 || cookieSessionId !== sessionId) {
+      res.clearCookie('user', {
+        'maxAge': 1000 * 600, // 有效时长(毫秒)
+        'signed': false // 默认为false，表示是否签名(Boolean)
+      })
+      req.session.destroy() // 清空所有session
+      res.redirect('/login')
+    } else {
+      next()
+    }
+    // let cookieUser = req.cookies.user
+    // let sessionUser = req.session.user
+  } else {
+    next()
+  }
+
+}
+
+app.use(auth)
+
 
 app.use('/', indexRouter)
 app.use('/s', jumpurlRouter)

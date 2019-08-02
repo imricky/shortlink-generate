@@ -67,10 +67,10 @@ router.post('/gen', async (req, res, next) => {
 
 router.get('/getList', async (req, res, next) => {
   let user = req.session.user || 0 //没有就是0
-  let offset = 20 * (req.query.currentPage - 1)
+  let offset = 10 * (req.query.currentPage - 1)
   try {
     let count = await query('select count(*) as count from fg_shortlink where userphid = ?',[user])
-    let result = await query('select * from fg_shortlink where userphid = ? order by phid limit 20 offset ?', [user, offset])
+    let result = await query('select * from fg_shortlink where userphid = ? order by phid limit 10 offset ?', [user, offset])
     res.json({
       success: true,
       data: result,
