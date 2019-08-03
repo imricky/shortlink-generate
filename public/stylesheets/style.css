@@ -44,14 +44,14 @@ body {
   border: 1px solid #0000ff;
 }
 
-table {
+.top-table {
   display: table;
   border-collapse: separate;
   border-spacing: 2px;
   border-color: grey;
 }
 
-td {
+.top-table > td {
   display: table-cell;
   vertical-align: inherit;
 }

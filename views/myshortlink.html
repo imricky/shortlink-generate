@@ -11,15 +11,22 @@
   <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
   <![endif]-->
   <!-- styles -->
-  <!--  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">-->
-<!--    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
-<!--    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
-<!--    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
-  <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
-  <script type="text/javascript" src="javascripts/vue.min.js"></script>
-  <script type="text/javascript" src="javascripts/iview.min.js"></script>
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+<!--  <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">-->
+<!--  <script type="text/javascript" src="javascripts/vue.min.js"></script>-->
+<!--  <script type="text/javascript" src="javascripts/iview.min.js"></script>-->
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
   <style>
+    #table-container{
+      min-width: 600px;
+      max-width: 1200px;
+      margin: 0 auto;
+      border: 1px solid #0000ff;
+      overflow：scroll;
+    }
   </style>
 </head>
 
@@ -27,19 +34,53 @@
 
 <!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
 <div id="app">
-  <!--  <div id="ceil">-->
-  <!--    <ul>-->
-  <!--      <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>-->
-  <!--      &lt;!&ndash;        <li><a class="active" href="#home">主页</a></li>&ndash;&gt;-->
-  <!--      <li>-->
-  <!--        <i-button @click="register">注册</i-button>-->
-  <!--      </li>-->
-  <!--      <li>-->
-  <!--        <i-button @click="login">登录</i-button>-->
-  <!--      </li>-->
-  <!--      &lt;!&ndash;        <li><a href="#contact">联系</a></li>&ndash;&gt;-->
-  <!--    </ul>-->
-  <!--  </div>-->
+  <div id="top">
+    <div class="content">
+      <div style="padding-top: 1px;">
+        <table>
+          <tbody>
+          <tr>
+            <td width="110" align="left">
+              <a href="/" title="short-link">
+                <div class="Logo"><img src="../../images/linkheader.png" alt=""></div>
+              </a>
+            </td>
+            <td v-if="isLogin" width="900" align="right" style="padding-top: 2px;">
+              <ul class="top-ul">
+                <li class="top-li">
+                  <i-button @click="logout">注销</i-button>
+                </li>
+                <li class="top-li">
+                  <Dropdown>
+                    <a href="javascript:void(0)" class="top-li-a">
+                      头像
+                      <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                      <DropdownItem class="droplist" @click="myshortlink">我的短链接</DropdownItem>
+                      <DropdownItem class="droplist" @click="personInfo">个人信息</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </li>
+              </ul>
+            </td>
+
+            <td v-else width="900" align="right" style="padding-top: 2px;">
+              <ul class="top-ul">
+                <li class="top-li">
+                  <i-button @click="register">注册</i-button>
+                </li>
+                <li class="top-li">
+                  <i-button @click="login">登录</i-button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div id="table-container">
     <i-table :columns="columns" :data="data">
       <template slot-scope="{ row, index }" slot="phid">
@@ -73,8 +114,9 @@
         </div>
       </template>
     </i-table>
+    <Page :total="totalCount" show-total @on-change="changePage" :page-size="10"/>
+
   </div>
-  <Page :total="totalCount" show-total @on-change="changePage" :page-size="10"/>
 </div>
 
 <script>
@@ -91,6 +133,8 @@
             title: '原链接',
             slot: 'long_link',
             // ellipsis: true,
+            minWidth:400,
+            tooltip:true
             // tooltip: 'true'
           },
           {
@@ -116,12 +160,32 @@
         editPhid: '',
         totalCount: 0,//总条数
         currentPage: 1,//当前页
+        isLogin: false,
       }
     },
     created() {
+      //一进来就去看有没有cookie在本地
+      this.checkCookies()
       this.getList()
+
     },
     methods: {
+      myshortlink() {
+        window.location.href = '/myshortlink'
+      },
+      personInfo() {
+        window.location.href = '/users/' + this.userphid
+      },
+      logout() {
+        window.location.href = '/register'
+      },
+      checkCookies() {
+        if (document.cookie.indexOf('connect.sid') > -1 && document.cookie.indexOf('user') > -1) {
+          this.isLogin = true
+          let userPhid = document.cookie.split(';')[0].split('=')[1]
+          this.userphid = userPhid
+        }
+      },
       changePage(page) {
         this.currentPage = page
         this.getList()
