@@ -61,6 +61,17 @@ a.top:link, a.top:visited {
   text-decoration: none;
 }
 
+.droplist {
+  color: #515a6e;
+  display: block;
+  width: auto;
+  padding: 0 5px;
+}
+
+.droplist:hover {
+  background-color: #e8eaec;
+  cursor: pointer
+}
 
 #ceil {
   height: 60px;
