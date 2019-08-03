@@ -20,44 +20,116 @@ body {
   background-position: center 0;
 }
 
+
+#top {
+  text-align: center;
+  /*background-color: var(--box-background-color);*/
+  height: 70px;
+  font-size: 15px;
+  font-weight: 500;
+  background-size: 70px 70px;
+  border-bottom: 1px solid rgba(0, 0, 0, .22);
+  padding: 0 20px;
+  border: 1px solid red;
+}
+
+#top > .content {
+  max-width: 1060px;
+}
+
+.content {
+  min-width: 600px;
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 1px solid #0000ff;
+}
+
+table {
+  display: table;
+  border-collapse: separate;
+  border-spacing: 2px;
+  border-color: grey;
+}
+
+td {
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+a.top:link, a.top:visited {
+  color: #556;
+  text-decoration: none;
+}
+
+
 #ceil {
   height: 60px;
   border: 1px solid red;
   width: 100%;
 }
 
-ul {
+.top-ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  /*background-color: #bbb;*/
 }
 
-li {
+.top-li {
   float: right;
-  border-right: 1px solid #bbb;
-  line-height: 60px;
+  /*border-right: 1px solid #bbb;*/
+  line-height: 32px;
+  padding-right: 10px;
 }
 
-li:last-child {
+.top-li:last-child {
   border-right: none;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 0 16px;
+.top-li-a {
+  /*display: block;*/
+  /*color: black;*/
+  /*text-align: center;*/
+  /*text-decoration: none;*/
+  /*margin-top: 2px;*/
+
   text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border-color: #dcdee2;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  line-height: 1.5;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 5px 15px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: color .2s linear,background-color .2s linear,border .2s linear,box-shadow .2s linear,-webkit-box-shadow .2s linear;
+  color: #515a6e;
+  background-color: #fff;
 }
 
-li a:hover:not(.active) {
+.top-li-a:hover:not(.active) {
   background-color: #515a6e;
 }
 
 .active {
   background-color: #4CAF50;
+}
+.Logo{
+  margin-left: 20px;
+  margin-top: 8px;
 }
 
 

@@ -8,172 +8,197 @@
   <meta name="author" content="">
   <!-- HTML5 shim, for IE6-8 support of HTML elements -->
   <!--[if lt IE 9]>
-      <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
-    <![endif]-->
+  <script src="http://apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script>
+  <![endif]-->
   <!-- styles -->
   <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-<!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
-<!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
-<!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+  <!--  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+  <!--  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+  <!--  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
   <link rel="stylesheet" type="text/css" href="stylesheets/iview.css">
   <script type="text/javascript" src="javascripts/vue.min.js"></script>
   <script type="text/javascript" src="javascripts/iview.min.js"></script>
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
   <script type="text/javascript" src="javascripts/copyClipboard.js"></script>
   <style>
-    .droplist{
+    .droplist {
       color: #515a6e;
       display: block;
       width: auto;
       padding: 0 5px;
     }
-    .droplist:hover{
+
+    .droplist:hover {
       background-color: #e8eaec;
-      cursor:pointer
+      cursor: pointer
     }
   </style>
 </head>
 
 <body>
 
-  <!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
-  <div id="app">
-    <div id="ceil">
-      <ul v-if="isLogin">
-        <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
-        <li><i-button @click="logout">注销</i-button></li>
-        <li>
-          <Dropdown>
-            <a href="javascript:void(0)">
-              头像
-              <Icon type="ios-arrow-down"></Icon>
-            </a>
-            <DropdownMenu slot="list">
-              <DropdownItem class="droplist" @click="myshortlink">我的短链接</DropdownItem>
-              <DropdownItem class="droplist" @click="personInfo">个人信息</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </li>
-      </ul>
-      <ul v-else>
-        <li style="float:left;padding-left: 30px"><a href="#about">关于</a></li>
-        <li><i-button @click="register">注册</i-button></li>
-        <li><i-button @click="login">登录</i-button></li>
-      </ul>
-    </div>
-    <div id="container">
-      <Card :bordered="false">
-        <div class="title">
-          <img src="../../images/logo.png">
-          <span>COOL SHORTLINK</span>
-          <!-- <%= title %> -->
-        </div>
-        <div class="link">
-          <div class="link-container">
-            <i-input size="large" v-model="longLink" clearable placeholder="请输入网址">
-              <i-button slot="append" icon="ios-search" @click="generate">缩短网址</i-button>
-            </i-input>
-          </div>
-        </div>
+<!-- <div id="app" style="background-image: url(./images/bg.jpg);"> -->
+<div id="app">
+  <div id="top">
+    <div class="content">
+      <div style="padding-top: 1px;">
+        <table>
+          <tbody>
+          <tr>
+            <td width="110" align="left">
+              <a href="/" title="short-link">
+                <div class="Logo"><img src="../../images/linkheader.png" alt=""></div>
+              </a>
+            </td>
+            <td v-if="isLogin" width="900" align="right" style="padding-top: 2px;">
+              <ul class="top-ul">
+                <li class="top-li">
+                  <i-button @click="logout">注销</i-button>
+                </li>
+                <li class="top-li">
+                  <Dropdown>
+                    <a href="javascript:void(0)" class="top-li-a">
+                      头像
+                      <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                      <DropdownItem class="droplist" @click="myshortlink">我的短链接</DropdownItem>
+                      <DropdownItem class="droplist" @click="personInfo">个人信息</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </li>
+              </ul>
+            </td>
 
-        <div class="link short-link" v-if="isGenerated">
-          <div class="link-container">
-            <i-input size="large" v-model="shortLink" clearable readonly="true">
-              <i-button slot="append" icon="ios-search" @click="copyToClipboard">复制链接</i-button>
-            </i-input>
-          </div>
-        </div>
-
-      </Card>
+            <td v-else width="900" align="right" style="padding-top: 2px;">
+              <ul class="top-ul">
+                <li class="top-li">
+                  <i-button @click="register">注册</i-button>
+                </li>
+                <li class="top-li">
+                  <i-button @click="login">登录</i-button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+  <div id="container">
+    <Card :bordered="false">
+      <div class="title">
+        <img src="../../images/logo.png">
+        <span>COOL SHORTLINK</span>
+        <!-- <%= title %> -->
+      </div>
+      <div class="link">
+        <div class="link-container">
+          <i-input size="large" v-model="longLink" clearable placeholder="请输入网址">
+            <i-button slot="append" icon="ios-search" @click="generate">缩短网址</i-button>
+          </i-input>
+        </div>
+      </div>
 
-  <script>
-    new Vue({
-      el: '#app',
-      data: {
-        longLink: '',
-        shortLink: '',
-        isGenerated: false,
-        isLogin:false,
-        userphid: '',
-      },
-      mounted(){
-        //一进来就去看有没有cookie在本地
-        this.checkCookies();
-      },
-      methods: {
-        login(){
-          window.location.href = '/login'
-        },
-        register(){
-          window.location.href = '/register'
-        },
-        logout(){
-          window.location.href = '/register'
-        },
-        myshortlink(){
-          window.location.href = '/myshortlink'
-        },
-        personInfo(){
-          window.location.href = '/users/'+ this.userphid
-        },
-        checkCookies(){
-          if(document.cookie.indexOf('connect.sid') > -1 && document.cookie.indexOf('user') > -1 ){
-            this.isLogin = true;
-            let userPhid = document.cookie.split(';')[0].split('=')[1];
-            this.userphid = userPhid;
-          }
+      <div class="link short-link" v-if="isGenerated">
+        <div class="link-container">
+          <i-input size="large" v-model="shortLink" clearable readonly="true">
+            <i-button slot="append" icon="ios-search" @click="copyToClipboard">复制链接</i-button>
+          </i-input>
+        </div>
+      </div>
 
-        },
-        generate: function () {
-          //先判断是否是一个合法的URL
-          if (!this.checkURL(this.longLink)) {
-            this.$Message.error({
-              title: '提示',
-              content: '输入的网址不合法，请重新输入',
-            })
-            return;
-          }
-          var userURL = this.longLink;
-          var self = this;
-          axios.post('/su/gen', {
-            userURL: userURL
+    </Card>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      longLink: '',
+      shortLink: '',
+      isGenerated: false,
+      isLogin: false,
+      userphid: '',
+    },
+    mounted() {
+      //一进来就去看有没有cookie在本地
+      this.checkCookies()
+    },
+    methods: {
+      login() {
+        window.location.href = '/login'
+      },
+      register() {
+        window.location.href = '/register'
+      },
+      logout() {
+        window.location.href = '/register'
+      },
+      myshortlink() {
+        window.location.href = '/myshortlink'
+      },
+      personInfo() {
+        window.location.href = '/users/' + this.userphid
+      },
+      checkCookies() {
+        if (document.cookie.indexOf('connect.sid') > -1 && document.cookie.indexOf('user') > -1) {
+          this.isLogin = true
+          let userPhid = document.cookie.split(';')[0].split('=')[1]
+          this.userphid = userPhid
+        }
+
+      },
+      generate: function () {
+        //先判断是否是一个合法的URL
+        if (!this.checkURL(this.longLink)) {
+          this.$Message.error({
+            title: '提示',
+            content: '输入的网址不合法，请重新输入',
           })
+          return
+        }
+        var userURL = this.longLink
+        var self = this
+        axios.post('/su/gen', {
+          userURL: userURL
+        })
             .then(function (response) {
-              let data = response.data;
+              let data = response.data
               if (data.code === 500) {
                 this.$Message.error({
                   title: '提示',
                   content: '输入的网址不合法，请重新输入',
                 })
-                return;
+                return
               }
-              self.shortLink = "localhost:3000/s/" + data.short_link;
-              self.isGenerated = true;
+              self.shortLink = "localhost:3000/s/" + data.short_link
+              self.isGenerated = true
 
             })
             .catch(function (error) {
-              console.log(error);
+              console.log(error)
             })
             .then(function () {
               // always executed
-            });
-        },
-        checkURL: function (url) {
-          //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
-          //下面的代码中应用了转义字符"\"输出一个字符"/"
-          var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-          var objExp = new RegExp(Expression);
-          return objExp.test(url) === true;
-        },
-        copyToClipboard: function () {
-          let shortLink = this.shortLink;
-          Clipboard.copy(shortLink);
-        },
-      }
-    })
-  </script>
+            })
+      },
+      checkURL: function (url) {
+        //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+        //下面的代码中应用了转义字符"\"输出一个字符"/"
+        var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/
+        var objExp = new RegExp(Expression)
+        return objExp.test(url) === true
+      },
+      copyToClipboard: function () {
+        let shortLink = this.shortLink
+        Clipboard.copy(shortLink)
+      },
+    }
+  })
+</script>
 </body>
 
 </html>
