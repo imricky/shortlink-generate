@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "autocannon": "^4.0.0",
+    "browser-sync": "^2.26.7",
     "chai": "^4.2.0",
     "istanbul": "^0.4.5",
     "mocha": "^6.2.0",

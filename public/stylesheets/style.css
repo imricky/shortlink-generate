@@ -30,7 +30,7 @@ body {
   background-size: 70px 70px;
   border-bottom: 1px solid rgba(0, 0, 0, .22);
   padding: 0 20px;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 #top > .content {
@@ -41,7 +41,7 @@ body {
   min-width: 600px;
   max-width: 1100px;
   margin: 0 auto;
-  border: 1px solid #0000ff;
+  /*border: 1px solid #0000ff;*/
 }
 
 .top-table {
@@ -75,7 +75,7 @@ a.top:link, a.top:visited {
 
 #ceil {
   height: 60px;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
   width: 100%;
 }
 
@@ -151,14 +151,14 @@ a.top:link, a.top:visited {
   left: 50%;
   top: 50%;
   margin: -200px 0 0 -400px;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 .title {
   line-height: 60px;
   height: 60px;
   text-align: center;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 .title > img {
@@ -178,7 +178,7 @@ a.top:link, a.top:visited {
   line-height: 60px;
   height: 60px;
   /* text-align: center; */
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 .link-container {
