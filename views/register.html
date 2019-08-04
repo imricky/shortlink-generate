@@ -19,6 +19,8 @@
   <script type="text/javascript" src="javascripts/vue.min.js"></script>
   <script type="text/javascript" src="javascripts/iview.min.js"></script>
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
+  <script type="text/javascript" src="javascripts/cookies.js"></script>
+
   <style>
     #input-all {
       width: 600px;
@@ -160,7 +162,9 @@
         window.location.href = '/users/' + this.userphid
       },
       logout() {
-        window.location.href = '/register'
+        docCookies.removeItem('connect.sid');
+        docCookies.removeItem('user');
+        window.location.href = '/'
       },
       checkCookies() {
         if (document.cookie.indexOf('connect.sid') > -1 && document.cookie.indexOf('user') > -1) {

@@ -20,6 +20,8 @@
 <!--  <script type="text/javascript" src="javascripts/iview.min.js"></script>-->
   <script type="text/javascript" src="javascripts/axios.min.js"></script>
   <script type="text/javascript" src="javascripts/copyClipboard.js"></script>
+  <script type="text/javascript" src="javascripts/cookies.js"></script>
+
   <style>
 
   </style>
@@ -125,7 +127,9 @@
         window.location.href = '/register'
       },
       logout() {
-        window.location.href = '/register'
+        docCookies.removeItem('connect.sid');
+        docCookies.removeItem('user');
+        window.location.href = '/'
       },
       myshortlink() {
         window.location.href = '/myshortlink'
