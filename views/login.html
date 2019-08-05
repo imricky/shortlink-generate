@@ -66,7 +66,7 @@
                 <li class="top-li">
                   <Dropdown>
                     <a href="javascript:void(0)" class="top-li-a">
-                      头像
+                      {{username}}
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
                     <DropdownMenu slot="list">
@@ -123,6 +123,8 @@
     data () {
       return {
         isLogin: false,
+        userphid: '',
+        username:'',
         formInline: {
           user: '',
           password: ''
@@ -160,6 +162,9 @@
           this.isLogin = true
           let userPhid = document.cookie.split(';')[0].split('=')[1]
           this.userphid = userPhid
+
+          let userName = document.cookie.split(';')[1].split('=')[1]
+          this.username = userName
         }
       },
       login(){

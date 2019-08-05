@@ -72,6 +72,11 @@ router.post('/login', async (req, res, next) => {
         'maxAge': 1000*600, // 有效时长(毫秒)
         'signed': false // 默认为false，表示是否签名(Boolean)
       })
+  res.cookie('username', userInDB,
+      {
+        'maxAge': 1000*600, // 有效时长(毫秒)
+        'signed': false // 默认为false，表示是否签名(Boolean)
+      })
 
   res.json({
     success: true,

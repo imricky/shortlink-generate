@@ -55,7 +55,7 @@
                 <li class="top-li">
                   <Dropdown>
                     <a href="javascript:void(0)" class="top-li-a">
-                      头像
+                      {{username}}
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
                     <DropdownMenu slot="list">
@@ -163,6 +163,8 @@
         totalCount: 0,//总条数
         currentPage: 1,//当前页
         isLogin: false,
+        userphid: '',
+        username:'',
       }
     },
     created() {
@@ -188,6 +190,9 @@
           this.isLogin = true
           let userPhid = document.cookie.split(';')[0].split('=')[1]
           this.userphid = userPhid
+
+          let userName = document.cookie.split(';')[1].split('=')[1]
+          this.username = userName
         }
       },
       changePage(page) {

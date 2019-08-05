@@ -67,11 +67,10 @@
         window.location.href = '/register'
       },
       logout(){
-        logout() {
           docCookies.removeItem('connect.sid');
           docCookies.removeItem('user');
           window.location.href = '/'
-        },
+
       },
       myshortlink(){
         window.location.href = '/myshortlink'
